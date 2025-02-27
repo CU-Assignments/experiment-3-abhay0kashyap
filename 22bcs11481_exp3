@@ -1,0 +1,143 @@
+import java.util.Scanner;
+
+public class SquareRootCalculator {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            System.out.print("Enter a number: ");
+            double number = scanner.nextDouble();
+
+            if (number < 0) {
+                throw new IllegalArgumentException("Error: Cannot calculate the square root of a negative number.");
+            }
+
+            double result = Math.sqrt(number);
+            System.out.println("Square root: " + result);
+
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error: Invalid input. Please enter a valid numeric value.");
+        } finally {
+            scanner.close();
+        }
+    }
+}
+
+
+import java.util.Scanner;
+
+class InvalidPINException extends Exception {
+    public InvalidPINException(String message) {
+        super(message);
+    }
+}
+
+class InsufficientFundsException extends Exception {
+    public InsufficientFundsException(String message) {
+        super(message);
+    }
+}
+
+public class ATM {
+    private static final int PIN = 1234;
+    private double balance = 3000;
+
+    public void validatePIN(int enteredPin) throws InvalidPINException {
+        if (enteredPin != PIN) {
+            throw new InvalidPINException("Error: Invalid PIN entered.");
+        }
+    }
+
+    public void withdraw(double amount) throws InsufficientFundsException {
+        if (amount > balance) {
+            throw new InsufficientFundsException("Error: Insufficient balance.");
+        }
+        balance -= amount;
+        System.out.println("Withdrawal successful! New balance: $" + balance);
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public static void main(String[] args) {
+        ATM atm = new ATM();
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            System.out.print("Enter PIN: ");
+            int pin = scanner.nextInt();
+            atm.validatePIN(pin);
+
+            System.out.print("Enter withdrawal amount: ");
+            double amount = scanner.nextDouble();
+            atm.withdraw(amount);
+        } catch (InvalidPINException | InsufficientFundsException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error: Invalid input.");
+        } finally {
+            System.out.println("Current Balance: $" + atm.getBalance());
+            scanner.close();
+        }
+    }
+}
+
+
+import java.util.HashSet;
+import java.util.Scanner;
+
+class CourseFullException extends Exception {
+    public CourseFullException(String message) {
+        super(message);
+    }
+}
+
+class PrerequisiteNotMetException extends Exception {
+    public PrerequisiteNotMetException(String message) {
+        super(message);
+    }
+}
+
+public class UniversityEnrollment {
+    private static final int MAX_ENROLLMENT = 3;
+    private static HashSet<String> enrolledStudents = new HashSet<>();
+    private static HashSet<String> completedCourses = new HashSet<>();
+
+    public static void enrollStudent(String studentName, String course, String prerequisite) throws CourseFullException, PrerequisiteNotMetException {
+        if (enrolledStudents.size() >= MAX_ENROLLMENT) {
+            throw new CourseFullException("Error: Course is full. No more enrollments allowed.");
+        }
+        if (!completedCourses.contains(prerequisite)) {
+            throw new PrerequisiteNotMetException("Error: Complete " + prerequisite + " before enrolling in " + course + ".");
+        }
+
+        enrolledStudents.add(studentName);
+        System.out.println("Enrollment successful for " + studentName + " in " + course);
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            System.out.print("Enter student name: ");
+            String name = scanner.nextLine();
+
+            System.out.print("Enter course name: ");
+            String course = scanner.nextLine();
+
+            System.out.print("Enter prerequisite course: ");
+            String prerequisite = scanner.nextLine();
+
+            enrollStudent(name, course, prerequisite);
+        } catch (CourseFullException | PrerequisiteNotMetException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error: Invalid input.");
+        } finally {
+            scanner.close();
+        }
+    }
+}
